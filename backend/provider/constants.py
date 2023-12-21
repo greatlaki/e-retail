@@ -1,9 +1,1 @@
-from django.db import models
-
-
-class ProviderTypeChoices(models.TextChoices):
-    FACTORY = 'FACTORY'
-    DISTRIBUTOR = 'DISTRIBUTOR'
-    DEALERSHIP = 'DEALERSHIP'
-    LARGE_RETAIL = 'LARGE_RETAIL'
-    INDIVIDUAL_ENTREPRENEUR = 'INDIVIDUAL_ENTREPRENEUR'
+VALID_PROVIDER_LEVEL = 'Invalide provider level.' ' Your level should be {valid_level}'
