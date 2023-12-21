@@ -1,0 +1,72 @@
+[tool.poetry]
+name = "app"
+version = "0.1.0"
+description = ""
+authors = ["vadim <greatlaki911@gmail.com>"]
+readme = "README.md"
+packages = [{include = "test_task_rocketdata_electronic_retail"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+djangorestframework = "^3.14.0"
+django = "^5.0"
+django-environ = "^0.11.2"
+pytest = "^7.4.3"
+psycopg2-binary = "^2.9.9"
+factory-boy = "^3.3.0"
+pytest-django = "^4.7.0"
+pre-commit = "^3.6.0"
+celery = "^5.3.6"
+ruff = "^0.1.8"
+pytest-cov = "^4.1.0"
+redis = "^5.0.1"
+drf-spectacular = "^0.27.0"
+drf-spectacular-sidecar = "^2023.12.1"
+mypy = "^1.7.1"
+black = "^23.12.0"
+django-stubs = {extras = ["compatible-mypy"], version = "^4.2.7"}
+djangorestframework-stubs = {extras = ["compatible-mypy"], version = "^3.14.5"}
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "app.settings"
+pythonpath = "backend"
+testpaths = "tests"
+python_files = "tests.py test_*.py *_tests.py"
+
+[tool.black]
+skip-string-normalization = true
+line-length = 120
+
+[tool.isort]
+profile = "black"
+line_length = 120
+
+[tool.ruff]
+select = ["B","C","E","F","W","T"]
+ignore = ["UP004", "D100", "D101", "D102", "D103", "D104", "D107", "D400", "D415"]
+line-length = 120
+target-version = "py311"
+exclude = [
+    ".git",
+    "*/migrations/*",
+    "*/static/*",
+    ".venv",
+    "__init__.py"
+]
+
+[tool.ruff.mccabe]
+max-complexity = 18
+
+[tool.mypy]
+plugins = ["mypy_django_plugin.main"]
+python_version = 3.11
+show_error_codes = true
+pretty = true
+ignore_missing_imports = true
+
+[tool.django-stubs]
+django_settings_module = "app.settings"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
