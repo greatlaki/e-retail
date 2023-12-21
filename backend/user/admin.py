@@ -1,10 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from users.models import User
+from user.models import User
 
 
 class UserAdmin(BaseUserAdmin):
-    """Define the admin pages for users"""
+    """Define the admin pages for user"""
 
     ordering = ['id']
     list_display = ['email']

@@ -36,8 +36,8 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'drf_spectacular_sidecar',
     # Local
-    'providers.apps.ProvidersConfig',
-    'users.apps.UsersConfig',
+    'provider.apps.ProvidersConfig',
+    'user.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
@@ -133,4 +133,4 @@ REST_FRAMEWORK = {
     ]
 }
 
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'user.User'
