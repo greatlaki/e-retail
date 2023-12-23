@@ -21,8 +21,8 @@ class ProviderListCreateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({'provider': 'Enter your provider'})
 
     @staticmethod
-    def custom_validate_first_level_chain(level: Provider.ProviderLevelChoices):
-        if level == Provider.ProviderLevelChoices.FIRST_LEVEL:
+    def custom_validate_first_level_chain(level: Provider.ProviderLevelChoices, provider: Provider):
+        if level == Provider.ProviderLevelChoices.FIRST_LEVEL and provider is not None:
             raise ValidationError({'level': 'Factory cannot have a provider'})
 
     @staticmethod
@@ -50,12 +50,14 @@ class ProviderListCreateSerializer(serializers.ModelSerializer):
         provider = attrs.get('provider', None)
         level = attrs['level']
 
-        if provider is None:
-            self.custom_validate_provider(level)
-
         is_provider_exists = Provider.objects.filter(name=attrs['name'])
         if is_provider_exists:
             raise serializers.ValidationError({'name': 'Provider already exists.'})
-        self.custom_validate_first_level_chain(attrs['level'])
+
+        if provider is None:
+            self.custom_validate_provider(level)
+            return attrs
+
+        self.custom_validate_first_level_chain(attrs['level'], provider)
         self.custom_validate_level_in_chain(level, provider)
         return attrs
