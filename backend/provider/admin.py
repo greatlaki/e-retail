@@ -4,9 +4,9 @@ from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import ngettext
 
-from provider.models.providers import Provider
-from provider.models.contacts import Contact
-from provider.models.products import Product
+from provider.models.provider import Provider
+from provider.models.contact import Contact
+from provider.models.product import Product
 from django.contrib import admin, messages
 
 admin.site.register(Contact)

@@ -9,6 +9,9 @@ class Contact(BaseModel):
     street = models.CharField(max_length=150)
     house_no = models.CharField(max_length=150)
 
-    providers = models.ForeignKey(
+    provider = models.ForeignKey(
         'provider.Provider', on_delete=models.CASCADE, null=True, blank=True, related_name='contacts'
     )
+
+    def __str__(self):
+        return f'{self.email}: {self.city}, {self.street}, {self.house_no}'

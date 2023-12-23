@@ -7,6 +7,9 @@ class Product(BaseModel):
     model = models.CharField(max_length=150)
     first_date_of_release = models.DateField(null=True, blank=True)
 
-    providers = models.ForeignKey(
+    provider = models.ForeignKey(
         'provider.Provider', on_delete=models.CASCADE, null=True, blank=True, related_name='products'
     )
+
+    def __str__(self):
+        return f'{self.name}: {self.model}'

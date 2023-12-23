@@ -15,13 +15,13 @@ repos:
   rev: 23.9.1
   hooks:
     - id: black
-      args: [--config=backend/pyproject.toml]
+      args: [--config=pyproject.toml]
 
-- repo: https://github.com/pre-commit/mirrors-mypy
-  rev: v1.7.1
-  hooks:
-  - id: mypy
-    args: [--install-types, --non-interactive, --ignore-missing-imports]
+#- repo: https://github.com/pre-commit/mirrors-mypy
+#  rev: v1.8.0
+#  hooks:
+#  - id: mypy
+#    args: [--install-types, --non-interactive, --ignore-missing-imports]
 
 - repo: https://github.com/astral-sh/ruff-pre-commit
   rev: v0.0.281

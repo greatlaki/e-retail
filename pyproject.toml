@@ -14,7 +14,6 @@ django-environ = "^0.11.2"
 pytest = "^7.4.3"
 psycopg2-binary = "^2.9.9"
 factory-boy = "^3.3.0"
-pytest-django = "^4.7.0"
 pre-commit = "^3.6.0"
 celery = "^5.3.6"
 ruff = "^0.1.8"
@@ -26,6 +25,7 @@ mypy = "^1.7.1"
 black = "^23.12.0"
 django-stubs = {extras = ["compatible-mypy"], version = "^4.2.7"}
 djangorestframework-stubs = {extras = ["compatible-mypy"], version = "^3.14.5"}
+pytest-django = "^4.7.0"
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "app.settings"
@@ -58,7 +58,7 @@ exclude = [
 max-complexity = 18
 
 [tool.mypy]
-plugins = ["mypy_django_plugin.main"]
+plugins = ["mypy_django_plugin.main"]  # noqa: F401
 python_version = 3.11
 show_error_codes = true
 pretty = true
