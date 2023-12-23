@@ -35,6 +35,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_spectacular',
     'drf_spectacular_sidecar',
+    # Local
+    'provider.apps.ProvidersConfig',
+    'user.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
@@ -129,3 +132,5 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ]
 }
+
+AUTH_USER_MODEL = 'user.User'
