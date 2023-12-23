@@ -28,23 +28,23 @@ class ProviderListCreateSerializer(serializers.ModelSerializer):
     @staticmethod
     def custom_validate_level_in_chain(level: Provider.ProviderLevelChoices, provider: Provider):
         if provider.level == Provider.ProviderLevelChoices.FIFTH_LEVEL:
-            raise ValidationError('Invalid provider')
+            raise ValidationError({'provider': 'Invalid provider'})
 
         valid_level = provider.level + 1
         customers = provider.customers.all()
         if customers:
             for item in customers:
                 if item.level == customers[0].level:
-                    raise ValidationError('The selected provider is already involved in the chain.')
+                    raise ValidationError({'provider': 'The selected provider is already involved in the chain.'})
 
         if level < provider.level:
-            raise ValidationError(VALID_PROVIDER_LEVEL.format(valid_level=valid_level))
+            raise ValidationError({'provider': VALID_PROVIDER_LEVEL.format(valid_level=valid_level)})
 
         if level == provider.level:
-            raise ValidationError(VALID_PROVIDER_LEVEL.format(valid_level=valid_level))
+            raise ValidationError({'provider': VALID_PROVIDER_LEVEL.format(valid_level=valid_level)})
 
         if level > provider.level + 1:
-            raise ValidationError(VALID_PROVIDER_LEVEL.format(valid_level=valid_level))
+            raise ValidationError({'provider': VALID_PROVIDER_LEVEL.format(valid_level=valid_level)})
 
     def validate(self, attrs):
         provider = attrs.get('provider', None)
