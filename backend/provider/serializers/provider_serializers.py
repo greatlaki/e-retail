@@ -5,15 +5,21 @@ from provider.models.provider import Provider
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from provider.serializers.contact_serializers import ContactSerializer
+from provider.serializers.product_serializers import ProductCreateSerializer
+
 
 class ProviderListCreateSerializer(serializers.ModelSerializer):
     provider = serializers.PrimaryKeyRelatedField(queryset=Provider.objects.all(), read_only=False, required=False)
     debt = serializers.DecimalField(max_digits=32, decimal_places=2, default=Decimal('0.0'))
     level = serializers.ChoiceField(choices=Provider.ProviderLevelChoices.choices, required=True)
 
+    contacts = ContactSerializer(read_only=True, many=True)
+    products = ProductCreateSerializer(read_only=True, many=True)
+
     class Meta:
         model = Provider
-        fields = ('id', 'name', 'provider', 'debt', 'level')
+        fields = ('id', 'name', 'provider', 'debt', 'level', 'contacts', 'products')
 
     @staticmethod
     def custom_validate_provider(level: Provider.ProviderLevelChoices):
@@ -61,3 +67,16 @@ class ProviderListCreateSerializer(serializers.ModelSerializer):
         self.custom_validate_first_level_chain(attrs['level'], provider)
         self.custom_validate_level_in_chain(level, provider)
         return attrs
+
+
+class ProviderRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
+    provider = serializers.PrimaryKeyRelatedField(queryset=Provider.objects.all(), read_only=False, required=False)
+    debt = serializers.CharField(read_only=True)
+    level = serializers.ChoiceField(choices=Provider.ProviderLevelChoices.choices, required=True)
+
+    contacts = ContactSerializer(read_only=True, many=True)
+    products = ProductCreateSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Provider
+        fields = ('id', 'name', 'provider', 'debt', 'level', 'contacts', 'products')

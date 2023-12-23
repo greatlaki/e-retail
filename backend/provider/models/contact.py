@@ -12,3 +12,6 @@ class Contact(BaseModel):
     provider = models.ForeignKey(
         'provider.Provider', on_delete=models.CASCADE, null=True, blank=True, related_name='contacts'
     )
+
+    def __str__(self):
+        return f'{self.email}: {self.city}, {self.street}, {self.house_no}'
