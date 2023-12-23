@@ -6,7 +6,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from provider.serializers.contact_serializers import ContactSerializer
-from provider.serializers.product_serializers import ProductCreateSerializer
+from provider.serializers.product_serializers import ProductSerializer
 
 
 class ProviderListCreateSerializer(serializers.ModelSerializer):
@@ -15,7 +15,7 @@ class ProviderListCreateSerializer(serializers.ModelSerializer):
     level = serializers.ChoiceField(choices=Provider.ProviderLevelChoices.choices, required=True)
 
     contacts = ContactSerializer(read_only=True, many=True)
-    products = ProductCreateSerializer(read_only=True, many=True)
+    products = ProductSerializer(read_only=True, many=True)
 
     class Meta:
         model = Provider
@@ -75,7 +75,7 @@ class ProviderRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
     level = serializers.ChoiceField(choices=Provider.ProviderLevelChoices.choices, required=True)
 
     contacts = ContactSerializer(read_only=True, many=True)
-    products = ProductCreateSerializer(read_only=True, many=True)
+    products = ProductSerializer(read_only=True, many=True)
 
     class Meta:
         model = Provider
