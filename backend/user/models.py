@@ -12,7 +12,7 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
-    providers = models.ForeignKey(
+    employer = models.ForeignKey(
         'provider.Provider', on_delete=models.CASCADE, null=True, blank=True, related_name='employees'
     )
 

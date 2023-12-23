@@ -15,9 +15,9 @@ class Provider(BaseModel):
         FIFTH_LEVEL = 4
 
     name = models.CharField(max_length=255)
-    provider = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='supplier')
+    provider = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='customers')
     debt = models.DecimalField(max_digits=32, decimal_places=2, default=Decimal('0.0'))
-    level = models.IntegerField(choices=ProviderLevelChoices.choices, default=ProviderLevelChoices.FIRST_LEVEL)
+    level = models.IntegerField(choices=ProviderLevelChoices.choices)
 
     def __str__(self):
         return self.name
@@ -27,11 +27,19 @@ class Provider(BaseModel):
             raise ValidationError('Factory cannot have a provider')
 
     def _validate_provider(self):
-        if self.level > Provider.ProviderLevelChoices.FIRST_LEVEL and self.provider is None:
+        if self.level is None:
+            raise ValidationError('Enter your level')
+        if self.level > Provider.ProviderLevelChoices.FIRST_LEVEL and self.provider is None or self.provider == self:
             raise ValidationError('Enter your provider')
 
     def _validate_level_in_chain(self):
+        if self.provider.level == Provider.ProviderLevelChoices.FIFTH_LEVEL:
+            raise ValidationError('Invalid provider')
+
         valid_level = Provider.ProviderLevelChoices(self.provider.level + 1).name
+
+        if self.provider.customers.all() and self not in self.provider.customers.all():
+            raise ValidationError('The selected provider is already involved in the chain.')
 
         if self.level < self.provider.level:
             raise ValidationError(VALID_PROVIDER_LEVEL.format(valid_level=valid_level))
@@ -42,9 +50,6 @@ class Provider(BaseModel):
         if self.level > self.provider.level + 1:
             raise ValidationError(VALID_PROVIDER_LEVEL.format(valid_level=valid_level))
 
-        if self.provider.supplier.all():
-            raise ValidationError('The selected provider is already involved in the chain')
-
     def clean(self):
         self._validate_provider()
         if self.provider is not None:
@@ -52,4 +57,5 @@ class Provider(BaseModel):
             self._validate_level_in_chain()
 
     def save(self, force_insert: bool = False, force_update: bool = False, using=None, update_fields=None):
+        self.full_clean()
         return super().save(force_insert, force_update, using, update_fields)
