@@ -18,6 +18,7 @@ class Provider(BaseModel):
     provider = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='customers')
     debt = models.DecimalField(max_digits=32, decimal_places=2, default=Decimal('0.0'))
     level = models.IntegerField(choices=ProviderLevelChoices.choices)
+    retail_products = models.ManyToManyField('Product', through='ProductToProvider')
 
     def __str__(self):
         return self.name
@@ -59,3 +60,6 @@ class Provider(BaseModel):
     def save(self, force_insert: bool = False, force_update: bool = False, using=None, update_fields=None):
         self.full_clean()
         return super().save(force_insert, force_update, using, update_fields)
+
+    class Meta:
+        db_table = 'providers'
