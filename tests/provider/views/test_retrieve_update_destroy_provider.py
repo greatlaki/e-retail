@@ -2,7 +2,14 @@ from decimal import Decimal
 
 import pytest
 
-from tests.provider.factories import ProviderFactory, ContactFactory, ProductFactory, Provider, CustomerFactory
+from tests.provider.factories import (
+    ProviderFactory,
+    ContactFactory,
+    ProductFactory,
+    Provider,
+    CustomerFactory,
+    ProductToProviderFactory,
+)
 
 
 class TestGet:
@@ -11,7 +18,8 @@ class TestGet:
         provider = ProviderFactory(name='First level', provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
         ContactFactory(city='Minsk', provider=provider)
         ContactFactory(city='Grodno', provider=provider)
-        ProductFactory(name='Product', provider=provider)
+        product = ProductFactory(name='Product')
+        ProductToProviderFactory(product=product, provider=provider)
 
         response = api_client.get(f'/api/providers/{provider.pk}/')
 

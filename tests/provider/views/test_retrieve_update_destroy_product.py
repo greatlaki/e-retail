@@ -1,15 +1,12 @@
 import pytest
 
-from tests.provider.factories import ProviderFactory, ProductFactory
-
-from provider.models.provider import Provider
+from tests.provider.factories import ProductFactory
 
 
 class TestGet:
     @pytest.mark.django_db
     def test_get_product(self, api_client):
-        provider = ProviderFactory(provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
-        product = ProductFactory(name='Product', provider=provider)
+        product = ProductFactory(name='Product')
 
         response = api_client.get(f'/api/providers/product/{product.pk}/')
 
@@ -19,8 +16,7 @@ class TestGet:
 class TestPatch:
     @pytest.mark.django_db
     def test_it_updates_product(self, api_client):
-        provider = ProviderFactory(provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
-        product = ProductFactory(name='Product', provider=provider)
+        product = ProductFactory(name='Product')
         data = {'name': 'test product'}
 
         response = api_client.patch(f'/api/providers/product/{product.pk}/', data=data, format='json')
@@ -33,8 +29,7 @@ class TestPatch:
 class TestDelete:
     @pytest.mark.django_db
     def test_it_deletes_product(self, api_client):
-        provider_1 = ProviderFactory(provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
-        product = ProductFactory(name='Product', provider=provider_1)
+        product = ProductFactory(name='Product')
 
         response = api_client.delete(f'/api/providers/product/{product.pk}/')
 

@@ -1,25 +1,29 @@
 from decimal import Decimal
 
+from django.db import transaction
+
 from provider.constants import VALID_PROVIDER_LEVEL
+from provider.models.product import Product, ProductToProvider
 from provider.models.provider import Provider
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from provider.serializers.contact_serializers import ContactSerializer
-from provider.serializers.product_serializers import ProductSerializer
+from provider.serializers.product_serializers import ProductToProviderSerializer
 
 
 class ProviderSerializer(serializers.ModelSerializer):
     provider = serializers.PrimaryKeyRelatedField(queryset=Provider.objects.all(), read_only=False, required=False)
     debt = serializers.DecimalField(max_digits=32, decimal_places=2, default=Decimal('0.0'))
     level = serializers.ChoiceField(choices=Provider.ProviderLevelChoices.choices, required=True)
+    product_id = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all(), read_only=False, required=False)
 
     contacts = ContactSerializer(read_only=True, many=True)
-    products = ProductSerializer(read_only=True, many=True)
+    products = ProductToProviderSerializer(read_only=True, many=True)
 
     class Meta:
         model = Provider
-        fields = ('id', 'name', 'provider', 'debt', 'level', 'contacts', 'products')
+        fields = ('id', 'name', 'provider', 'debt', 'level', 'contacts', 'products', 'product_id')
 
     @staticmethod
     def custom_validate_provider(level: Provider.ProviderLevelChoices):
@@ -71,8 +75,25 @@ class ProviderSerializer(serializers.ModelSerializer):
             self.custom_validate_level_in_chain(level, provider)
         return super().validate(attrs=attrs)
 
+    def create(self, validated_data):
+        product_id = validated_data.pop('product_id', None)
+        if product_id is not None:
+            with transaction.atomic():
+                provider = super().create(validated_data)
+                ProductToProvider.objects.create(provider=provider, product=product_id)
+                return provider
+        return super().create(validated_data)
+
     def update(self, instance, validated_data):
         debt = validated_data.get('debt', None)
+        product_id = validated_data.pop('product_id', None)
+
         if debt is not None:
             raise serializers.ValidationError({'debt': 'You cannot update this field'})
+
+        if product_id is not None:
+            with transaction.atomic():
+                provider = super().update(instance, validated_data)
+                ProductToProvider.objects.create(provider=provider, product=product_id)
+
         return super().update(instance, validated_data)

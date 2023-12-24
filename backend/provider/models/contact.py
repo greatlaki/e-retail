@@ -15,3 +15,6 @@ class Contact(BaseModel):
 
     def __str__(self):
         return f'{self.email}: {self.city}, {self.street}, {self.house_no}'
+
+    class Meta:
+        db_table = 'contacts'

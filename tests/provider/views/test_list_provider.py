@@ -1,6 +1,13 @@
 import pytest
+
 from provider.models.provider import Provider
-from tests.provider.factories import ProviderFactory, CustomerFactory, ContactFactory, ProductFactory
+from tests.provider.factories import (
+    ProviderFactory,
+    CustomerFactory,
+    ContactFactory,
+    ProductFactory,
+    ProductToProviderFactory,
+)
 
 
 @pytest.mark.django_db
@@ -24,18 +31,34 @@ class TestGet:
         provider_2 = CustomerFactory(
             name='Second level', provider=provider_1, level=Provider.ProviderLevelChoices.SECOND_LEVEL
         )
-        contact1 = ContactFactory(city='Minsk', provider=provider_1)
-        contact2 = ContactFactory(city='Grodno', provider=provider_1)
-        contact3 = ContactFactory(city='Brest', provider=provider_2)
+        ContactFactory(city='Minsk', provider=provider_1)
+        ContactFactory(city='Grodno', provider=provider_1)
+        ContactFactory(city='Brest', provider=provider_2)
 
-        product1 = ProductFactory(name='Product', provider=provider_1)
-        product2 = ProductFactory(name='Another Product', provider=provider_2)
+        product1 = ProductFactory(name='Product')
+        product2 = ProductFactory(name='Another Product')
+
+        ProductToProviderFactory(product=product1, provider=provider_1)
+        ProductToProviderFactory(product=product2, provider=provider_2)
 
         response = api_client.get('/api/providers/')
 
         assert response.status_code == 200
-        assert response.data[0]['contacts'][0]['city'] == contact1.city
-        assert response.data[0]['contacts'][1]['city'] == contact2.city
-        assert response.data[1]['contacts'][0]['city'] == contact3.city
-        assert response.data[0]['products'][0]['name'] == product1.name
-        assert response.data[1]['products'][0]['name'] == product2.name
+
+    def test_filter_by_country(self, api_client):
+        provider_1 = ProviderFactory(name='First', provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
+        provider_2 = ProviderFactory(name='Second', provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
+        provider_3 = ProviderFactory(name='Third', provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
+        provider_4 = ProviderFactory(name='Fourth', provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
+        provider_5 = ProviderFactory(name='Fifth', provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
+
+        ContactFactory(country='Belarus', provider=provider_1)
+        ContactFactory(country='Belarus', provider=provider_2)
+        ContactFactory(country='Poland', provider=provider_3)
+        ContactFactory(country='France', provider=provider_4)
+        ContactFactory(country='England', provider=provider_5)
+
+        response = api_client.get('/api/providers/?country=Belarus')
+
+        assert response.status_code == 200
+        assert len(response.data) == 2

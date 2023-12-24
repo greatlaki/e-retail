@@ -20,8 +20,8 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
 
     objects = UserManager()
 
-    class Meta:
-        db_table = 'user'
-
     def __str__(self):
         return self.email
+
+    class Meta:
+        db_table = 'users'

@@ -8,7 +8,7 @@ from faker import Faker
 
 from provider.models.provider import Provider
 from provider.models.contact import Contact
-from provider.models.product import Product
+from provider.models.product import Product, ProductToProvider
 
 fake = Faker(locale='en_Us')
 
@@ -54,4 +54,10 @@ class ProductFactory(DjangoModelFactory):
     model = fuzzy.FuzzyText(prefix='test-')
     first_date_of_release = fuzzy.FuzzyDate(start_date=datetime.date(2007, 1, 1))
 
-    provider = SubFactory(ProviderFactory)
+
+class ProductToProviderFactory(DjangoModelFactory):
+    class Meta:
+        model = ProductToProvider
+
+    product = factory.SubFactory(ProductFactory)
+    provider = factory.SubFactory(ProviderFactory)

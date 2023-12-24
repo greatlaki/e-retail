@@ -59,3 +59,6 @@ class Provider(BaseModel):
     def save(self, force_insert: bool = False, force_update: bool = False, using=None, update_fields=None):
         self.full_clean()
         return super().save(force_insert, force_update, using, update_fields)
+
+    class Meta:
+        db_table = 'providers'
