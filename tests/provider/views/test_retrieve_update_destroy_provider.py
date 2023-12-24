@@ -19,7 +19,7 @@ class TestGet:
         ContactFactory(city='Minsk', provider=provider)
         ContactFactory(city='Grodno', provider=provider)
         product = ProductFactory(name='Product')
-        ProductToProviderFactory(product=product, provider=provider)
+        ProductToProviderFactory(product_id=product, provider_id=provider)
 
         response = api_client.get(f'/api/providers/{provider.pk}/')
 
@@ -66,7 +66,7 @@ class TestPatch:
         assert response.data['provider'] == ['Enter your provider']
 
     @pytest.mark.django_db
-    def test_it_returns_error_if(self, api_client):
+    def test_it_returns_error_if_was_selected_invalid_level(self, api_client):
         provider_1 = ProviderFactory(provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
         CustomerFactory(provider=provider_1, level=Provider.ProviderLevelChoices.SECOND_LEVEL)
 
@@ -80,6 +80,18 @@ class TestPatch:
         provider_5.refresh_from_db()
         assert response.status_code == 400
         assert response.data['provider'] == ['The selected provider is already involved in the chain.']
+
+    @pytest.mark.django_db
+    def test_it_returns_error_if_was_selected_invalid_level(self, api_client):
+        provider = ProviderFactory(provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
+        product = ProductFactory()
+        data = {'product_id': product.pk}
+
+        response = api_client.patch(f'/api/providers/{provider.pk}/', data=data, format='json')
+
+        provider.refresh_from_db()
+        assert response.status_code == 200
+        assert product in provider.retail_products.all()
 
 
 class TestDelete:

@@ -9,7 +9,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from provider.serializers.contact_serializers import ContactSerializer
-from provider.serializers.product_serializers import ProductToProviderSerializer
+from provider.serializers.product_serializers import ProductSerializer
 
 
 class ProviderSerializer(serializers.ModelSerializer):
@@ -19,11 +19,11 @@ class ProviderSerializer(serializers.ModelSerializer):
     product_id = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all(), read_only=False, required=False)
 
     contacts = ContactSerializer(read_only=True, many=True)
-    products = ProductToProviderSerializer(read_only=True, many=True)
+    retail_products = ProductSerializer(read_only=True, many=True)
 
     class Meta:
         model = Provider
-        fields = ('id', 'name', 'provider', 'debt', 'level', 'contacts', 'products', 'product_id')
+        fields = ('id', 'name', 'provider', 'debt', 'level', 'contacts', 'retail_products', 'product_id')
 
     @staticmethod
     def custom_validate_provider(level: Provider.ProviderLevelChoices):
@@ -76,24 +76,24 @@ class ProviderSerializer(serializers.ModelSerializer):
         return super().validate(attrs=attrs)
 
     def create(self, validated_data):
-        product_id = validated_data.pop('product_id', None)
-        if product_id is not None:
+        product = validated_data.pop('product_id', None)
+        if product is not None:
             with transaction.atomic():
                 provider = super().create(validated_data)
-                ProductToProvider.objects.create(provider=provider, product=product_id)
+                ProductToProvider.objects.create(provider_id=provider, product_id=product)
                 return provider
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
         debt = validated_data.get('debt', None)
-        product_id = validated_data.pop('product_id', None)
+        product = validated_data.pop('product_id', None)
 
         if debt is not None:
             raise serializers.ValidationError({'debt': 'You cannot update this field'})
 
-        if product_id is not None:
+        if product is not None:
             with transaction.atomic():
                 provider = super().update(instance, validated_data)
-                ProductToProvider.objects.create(provider=provider, product=product_id)
+                ProductToProvider.objects.create(provider_id=provider, product_id=product)
 
         return super().update(instance, validated_data)

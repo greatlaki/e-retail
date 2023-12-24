@@ -26,7 +26,7 @@ class TestGet:
 
         assert response.status_code == 200
 
-    def test_get_providers_with_contacts_products(self, api_client):
+    def test_get_providers_with_contacts_and_products(self, api_client):
         provider_1 = ProviderFactory(name='First level', provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
         provider_2 = CustomerFactory(
             name='Second level', provider=provider_1, level=Provider.ProviderLevelChoices.SECOND_LEVEL
@@ -38,8 +38,8 @@ class TestGet:
         product1 = ProductFactory(name='Product')
         product2 = ProductFactory(name='Another Product')
 
-        ProductToProviderFactory(product=product1, provider=provider_1)
-        ProductToProviderFactory(product=product2, provider=provider_2)
+        ProductToProviderFactory(product_id=product1, provider_id=provider_1)
+        ProductToProviderFactory(product_id=product2, provider_id=provider_2)
 
         response = api_client.get('/api/providers/')
 
@@ -62,3 +62,29 @@ class TestGet:
 
         assert response.status_code == 200
         assert len(response.data) == 2
+
+    def test_filter_by_product_ids(self, api_client):
+        provider_1 = ProviderFactory(provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
+        provider_2 = ProviderFactory(provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
+        provider_3 = ProviderFactory(provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
+        provider_4 = ProviderFactory(provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
+        provider_5 = ProviderFactory(provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
+
+        product1 = ProductFactory()
+        product2 = ProductFactory()
+        product3 = ProductFactory()
+
+        ProductToProviderFactory(product_id=product1, provider_id=provider_1)
+        ProductToProviderFactory(product_id=product1, provider_id=provider_2)
+        ProductToProviderFactory(product_id=product1, provider_id=provider_3)
+
+        ProductToProviderFactory(product_id=product2, provider_id=provider_5)
+        ProductToProviderFactory(product_id=product2, provider_id=provider_4)
+
+        ProductToProviderFactory(product_id=product3, provider_id=provider_1)
+        ProductToProviderFactory(product_id=product3, provider_id=provider_3)
+
+        response = api_client.get(f'/api/providers/?product_ids={product3.pk},{product2.pk}')
+
+        assert response.status_code == 200
+        assert len(response.data) == 4
