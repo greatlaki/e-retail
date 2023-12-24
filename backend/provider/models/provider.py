@@ -44,10 +44,10 @@ class Provider(BaseModel):
         if self.level < self.provider.level:
             raise ValidationError(VALID_PROVIDER_LEVEL.format(valid_level=valid_level))
 
-        if self.level == self.provider.level:
+        elif self.level == self.provider.level:
             raise ValidationError(VALID_PROVIDER_LEVEL.format(valid_level=valid_level))
 
-        if self.level > self.provider.level + 1:
+        elif self.level > self.provider.level + 1:
             raise ValidationError(VALID_PROVIDER_LEVEL.format(valid_level=valid_level))
 
     def clean(self):

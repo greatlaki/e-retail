@@ -46,10 +46,10 @@ class ProviderListCreateSerializer(serializers.ModelSerializer):
         if level < provider.level:
             raise ValidationError({'provider': VALID_PROVIDER_LEVEL.format(valid_level=valid_level)})
 
-        if level == provider.level:
+        elif level == provider.level:
             raise ValidationError({'provider': VALID_PROVIDER_LEVEL.format(valid_level=valid_level)})
 
-        if level > provider.level + 1:
+        elif level > provider.level + 1:
             raise ValidationError({'provider': VALID_PROVIDER_LEVEL.format(valid_level=valid_level)})
 
     def validate(self, attrs):
