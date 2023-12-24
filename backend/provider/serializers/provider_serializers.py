@@ -97,3 +97,9 @@ class ProviderSerializer(serializers.ModelSerializer):
                 ProductToProvider.objects.create(provider_id=provider, product_id=product)
 
         return super().update(instance, validated_data)
+
+
+class ProviderStatisticSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Provider
+        fields = ('id', 'name', 'debt')

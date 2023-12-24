@@ -82,7 +82,7 @@ class TestPatch:
         assert response.data['provider'] == ['The selected provider is already involved in the chain.']
 
     @pytest.mark.django_db
-    def test_it_returns_error_if_was_selected_invalid_level(self, api_client):
+    def test_it_adds_product_to_provider(self, api_client):
         provider = ProviderFactory(provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
         product = ProductFactory()
         data = {'product_id': product.pk}

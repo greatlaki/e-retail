@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 import pytest
 
 from provider.models.provider import Provider
@@ -88,3 +90,29 @@ class TestGet:
 
         assert response.status_code == 200
         assert len(response.data) == 4
+
+    def test_it_returns_debt_statistic(self, api_client):
+        provider_1 = ProviderFactory(
+            provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL, debt=Decimal('0.0')
+        )
+        provider_2 = CustomerFactory(
+            provider=provider_1, level=Provider.ProviderLevelChoices.SECOND_LEVEL, debt=Decimal('50.00')
+        )
+        provider_3 = CustomerFactory(
+            provider=provider_2, level=Provider.ProviderLevelChoices.THIRD_LEVEL, debt=Decimal('50.00')
+        )
+        provider_4 = CustomerFactory(
+            provider=provider_3, level=Provider.ProviderLevelChoices.FOURTH_LEVEL, debt=Decimal('50.00')
+        )
+        CustomerFactory(provider=provider_4, level=Provider.ProviderLevelChoices.FIFTH_LEVEL, debt=Decimal('50.00'))
+
+        provider = ProviderFactory(provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL, debt=Decimal('0.0'))
+        provider_with_giant_debt = CustomerFactory(
+            provider=provider, level=Provider.ProviderLevelChoices.SECOND_LEVEL, debt=Decimal('1000.00')
+        )
+
+        response = api_client.get('/api/providers/debt-statistic/')
+
+        assert response.status_code == 200
+        assert len(response.data) == 1
+        assert Decimal(response.data[0]['debt']) == provider_with_giant_debt.debt
