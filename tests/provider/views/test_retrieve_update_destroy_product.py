@@ -1,3 +1,5 @@
+import datetime
+
 import pytest
 
 from tests.provider.factories import ProductFactory
@@ -41,6 +43,26 @@ class TestPatch:
         response = api_client.patch(f'/api/providers/product/{product.pk}/', data=data, format='json')
 
         assert response.status_code == 401
+
+    def test_it_returns_error_if_name_is_invalid(self, api_client, active_user):
+        api_client.force_authenticate(active_user)
+        product = ProductFactory(name='Product')
+        data = {'name': 'test product, test product, test product, test product'}
+
+        response = api_client.patch(f'/api/providers/product/{product.pk}/', data=data, format='json')
+
+        assert response.status_code == 400
+        assert response.data['name'] == 'Invalid name length'
+
+    def test_it_returns_error_if_date_is_invalid(self, api_client, active_user):
+        api_client.force_authenticate(active_user)
+        product = ProductFactory(name='Product')
+        data = {'first_date_of_release': datetime.date.today() + datetime.timedelta(days=90)}
+
+        response = api_client.patch(f'/api/providers/product/{product.pk}/', data=data, format='json')
+
+        assert response.status_code == 400
+        assert response.data['date'] == 'The release date of the product cannot be in the future.'
 
 
 @pytest.mark.django_db
