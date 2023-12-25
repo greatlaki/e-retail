@@ -9,6 +9,8 @@ from provider.models.contact import Contact
 from provider.models.product import Product
 from django.contrib import admin, messages
 
+from provider.tasks import clear_debt_task
+
 admin.site.register(Contact)
 admin.site.register(Product)
 
@@ -30,7 +32,10 @@ class ProviderAdmin(admin.ModelAdmin):
 
     @admin.action(description='Pay off the debt owed to the provider')
     def pay_off_debt_owed(self, request, queryset):
-        updated = queryset.update(debt=Decimal('0.0'))
+        if len(queryset) > 20:
+            updated = clear_debt_task.delay(list(queryset.values_list('id', flat=True)))
+        else:
+            updated = queryset.update(debt=Decimal('0.0'))
         self.message_user(
             request,
             ngettext(
