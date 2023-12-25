@@ -5,7 +5,8 @@ from tests.provider.factories import ProviderFactory, CustomerFactory, ProductFa
 
 @pytest.mark.django_db
 class TestPost:
-    def test_it_creates_first_level_in_retail_chain(self, api_client):
+    def test_it_creates_first_level_in_retail_chain(self, api_client, active_user):
+        api_client.force_authenticate(active_user)
         provider = ProviderFactory.build(provider=None)
         data = {
             'name': provider.name,
@@ -18,7 +19,8 @@ class TestPost:
         assert response.data['name'] == data['name']
         assert response.data['level'] == data['level']
 
-    def test_it_returns_error_if_provider_name_exists(self, api_client):
+    def test_it_returns_error_if_provider_name_exists(self, api_client, active_user):
+        api_client.force_authenticate(active_user)
         provider = ProviderFactory(name='First Factory', level=Provider.ProviderLevelChoices.FIRST_LEVEL)
         data = {
             'name': provider.name,
@@ -30,7 +32,8 @@ class TestPost:
         assert response.status_code == 400
         assert response.data['name'][0] == 'Provider already exists.'
 
-    def test_it_creates_second_level_in_retail_chain(self, api_client):
+    def test_it_creates_second_level_in_retail_chain(self, api_client, active_user):
+        api_client.force_authenticate(active_user)
         provider = ProviderFactory(name='First level', provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
         customer = CustomerFactory.build()
         data = {
@@ -46,7 +49,8 @@ class TestPost:
         assert response.data['provider'] == data['provider']
         assert response.data['level'] == data['level']
 
-    def test_it_creates_third_level_in_retail_chain(self, api_client):
+    def test_it_creates_third_level_in_retail_chain(self, api_client, active_user):
+        api_client.force_authenticate(active_user)
         provider_1 = ProviderFactory(name='First level', provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
         provider_2 = CustomerFactory(
             name='Second level', provider=provider_1, level=Provider.ProviderLevelChoices.SECOND_LEVEL
@@ -65,7 +69,8 @@ class TestPost:
         assert response.data['provider'] == data['provider']
         assert response.data['level'] == data['level']
 
-    def test_it_creates_fourth_level_in_retail_chain(self, api_client):
+    def test_it_creates_fourth_level_in_retail_chain(self, api_client, active_user):
+        api_client.force_authenticate(active_user)
         provider_1 = ProviderFactory(name='First level', provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
         provider_2 = CustomerFactory(
             name='Second level', provider=provider_1, level=Provider.ProviderLevelChoices.SECOND_LEVEL
@@ -87,7 +92,8 @@ class TestPost:
         assert response.data['provider'] == data['provider']
         assert response.data['level'] == data['level']
 
-    def test_it_creates_fifth_level_in_retail_chain(self, api_client):
+    def test_it_creates_fifth_level_in_retail_chain(self, api_client, active_user):
+        api_client.force_authenticate(active_user)
         provider_1 = ProviderFactory(name='First level', provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
         provider_2 = CustomerFactory(
             name='Second level', provider=provider_1, level=Provider.ProviderLevelChoices.SECOND_LEVEL
@@ -112,7 +118,8 @@ class TestPost:
         assert response.data['provider'] == data['provider']
         assert response.data['level'] == data['level']
 
-    def test_it_returns_error_if_level_is_invalid(self, api_client):
+    def test_it_returns_error_if_level_is_invalid(self, api_client, active_user):
+        api_client.force_authenticate(active_user)
         provider_1 = ProviderFactory(name='First level', provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
         customer = CustomerFactory.build()
         data = {
@@ -128,7 +135,8 @@ class TestPost:
             f'Invalide provider level. Your level should be {Provider.ProviderLevelChoices.FIRST_LEVEL + 1}'
         ]
 
-    def test_it_returns_error_if_level_is_busy(self, api_client):
+    def test_it_returns_error_if_level_is_busy(self, api_client, active_user):
+        api_client.force_authenticate(active_user)
         provider_1 = ProviderFactory(name='First level', provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
         ProviderFactory(name='Second level', provider=provider_1, level=Provider.ProviderLevelChoices.SECOND_LEVEL)
         customer = CustomerFactory.build()
@@ -143,7 +151,8 @@ class TestPost:
         assert response.status_code == 400
         assert response.data['provider'] == ['The selected provider is already involved in the chain.']
 
-    def test_it_returns_error_if_first_level_has_provider(self, api_client):
+    def test_it_returns_error_if_first_level_has_provider(self, api_client, active_user):
+        api_client.force_authenticate(active_user)
         some_provider = ProviderFactory(
             name='First level', provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL
         )
@@ -159,7 +168,8 @@ class TestPost:
         assert response.status_code == 400
         assert response.data['level'] == ['Factory cannot have a provider']
 
-    def test_it_returns_error_if_selected_provider_on_fifth_level(self, api_client):
+    def test_it_returns_error_if_selected_provider_on_fifth_level(self, api_client, active_user):
+        api_client.force_authenticate(active_user)
         provider_1 = ProviderFactory(name='First level', provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
         provider_2 = CustomerFactory(
             name='Second level', provider=provider_1, level=Provider.ProviderLevelChoices.SECOND_LEVEL
@@ -185,7 +195,8 @@ class TestPost:
         assert response.status_code == 400
         assert response.data['provider'] == ['Invalid provider']
 
-    def test_it_returns_error_if_provider_did_not_entered(self, api_client):
+    def test_it_returns_error_if_provider_did_not_entered(self, api_client, active_user):
+        api_client.force_authenticate(active_user)
         provider_1 = ProviderFactory(name='First level', provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
         provider_2 = CustomerFactory(
             name='Second level', provider=provider_1, level=Provider.ProviderLevelChoices.SECOND_LEVEL
@@ -202,7 +213,8 @@ class TestPost:
         assert response.status_code == 400
         assert response.data['provider'] == ['Enter your provider']
 
-    def test_it_creates_provider_with_product(self, api_client):
+    def test_it_creates_provider_with_product(self, api_client, active_user):
+        api_client.force_authenticate(active_user)
         product = ProductFactory()
         provider = ProviderFactory.build(provider=None)
         data = {
@@ -214,3 +226,16 @@ class TestPost:
         response = api_client.post('/api/providers/', data=data, format='json')
 
         assert response.status_code == 201
+
+    def test_inactive_user_cannot_create_provider(self, api_client):
+        product = ProductFactory()
+        provider = ProviderFactory.build(provider=None)
+        data = {
+            'name': provider.name,
+            'level': Provider.ProviderLevelChoices.FIRST_LEVEL,
+            'product_id': product.pk,
+        }
+
+        response = api_client.post('/api/providers/', data=data, format='json')
+
+        assert response.status_code == 401
