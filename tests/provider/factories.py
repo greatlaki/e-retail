@@ -59,5 +59,5 @@ class ProductToProviderFactory(DjangoModelFactory):
     class Meta:
         model = ProductToProvider
 
-    product_id = factory.SubFactory(ProductFactory)
-    provider_id = factory.SubFactory(ProviderFactory)
+    product = factory.SubFactory(ProductFactory)
+    provider = factory.SubFactory(ProviderFactory)

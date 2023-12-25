@@ -18,9 +18,9 @@ class Product(BaseModel):
 
 
 class ProductToProvider(BaseModel):
-    product_id = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='providers')
-    provider_id = models.ForeignKey(Provider, on_delete=models.CASCADE, related_name='products')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='providers')
+    provider = models.ForeignKey(Provider, on_delete=models.CASCADE, related_name='products')
 
     class Meta:
         db_table = 'products_to_providers'
-        unique_together = ('provider_id', 'product_id')
+        unique_together = ('product', 'provider')

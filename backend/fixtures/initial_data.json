@@ -1,0 +1,346 @@
+[
+    {
+        "model": "provider.product",
+        "pk": 100,
+        "fields": {
+            "name": "Product A",
+            "model": "Test model",
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+        {
+        "model": "provider.product",
+        "pk": 101,
+        "fields": {
+            "name": "Product B",
+            "model": "Test model",
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "provider.provider",
+        "pk": 100,
+        "fields": {
+            "name": "Factory A",
+            "level": 0,
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "provider.provider",
+        "pk": 101,
+        "fields": {
+            "name": "Distributor A",
+            "provider_id": 100,
+            "level": 1,
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "provider.provider",
+        "pk": 102,
+        "fields": {
+            "name": "Dealership A",
+            "provider_id": 101,
+            "level": 2,
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "provider.provider",
+        "pk": 103,
+        "fields": {
+            "name": "Large retail chain A",
+            "provider_id": 102,
+            "level": 3,
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "provider.provider",
+        "pk": 104,
+        "fields": {
+            "name": "Individual entrepreneur A",
+            "provider_id": 103,
+            "level": 4,
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "provider.provider",
+        "pk": 105,
+        "fields": {
+            "name": "Factory B",
+            "level": 0,
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "provider.provider",
+        "pk": 106,
+        "fields": {
+            "name": "Distributor B",
+            "provider_id": 105,
+            "level": 1,
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "provider.provider",
+        "pk": 107,
+        "fields": {
+            "name": "Dealership B",
+            "provider_id": 106,
+            "level": 2,
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "provider.provider",
+        "pk": 108,
+        "fields": {
+            "name": "Large retail chain B",
+            "provider_id": 107,
+            "level": 3,
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "provider.provider",
+        "pk": 109,
+        "fields": {
+            "name": "Individual entrepreneur B",
+            "provider_id": 108,
+            "level": 4,
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "provider.producttoprovider",
+        "pk": 1,
+        "fields": {
+            "product_id": 100,
+            "provider_id": 100,
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "provider.producttoprovider",
+        "pk": 2,
+        "fields": {
+            "product_id": 101,
+            "provider_id": 105,
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+        {
+        "model": "user.user",
+        "pk": 100,
+        "fields": {
+            "email": "admin@admin.com",
+            "is_active": "True",
+            "is_staff": "True",
+            "is_superuser": "True",
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "user.user",
+        "pk": 101,
+        "fields": {
+            "email": "test1a@example.com",
+            "is_active": "True",
+            "employer": 100,
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+        {
+        "model": "user.user",
+        "pk": 102,
+        "fields": {
+            "email": "test2a@example.com",
+            "is_active": "True",
+            "employer": 100,
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+            {
+        "model": "user.user",
+        "pk": 103,
+        "fields": {
+            "email": "test1b@example.com",
+            "is_active": "True",
+            "employer": 105,
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+                {
+        "model": "user.user",
+        "pk": 104,
+        "fields": {
+            "email": "test2b@example.com",
+            "is_active": "True",
+            "employer": 105,
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+                    {
+        "model": "provider.contact",
+        "pk": 100,
+        "fields": {
+            "email": "factory_a@example.com",
+            "country": "USA",
+            "city": "Phoenix",
+            "street": "Arrowhead Dr.",
+            "house_no": "702",
+            "provider": 100,
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+                        {
+        "model": "provider.contact",
+        "pk": 101,
+        "fields": {
+            "email": "distributor_a@example.com",
+            "country": "USA",
+            "city": "Merrillville",
+            "street": "Shipley Lane",
+            "house_no": "460",
+            "provider": 101,
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "provider.contact",
+        "pk": 102,
+        "fields": {
+            "email": "dealership_a@example.com",
+            "country": "USA",
+            "city": "Nottingham",
+            "street": "Galvin Lane",
+            "house_no": "57",
+            "provider": 102,
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+        {
+        "model": "provider.contact",
+        "pk": 103,
+        "fields": {
+            "email": "large_retail_chain_a@example.com",
+            "country": "USA",
+            "city": "Key West",
+            "street": "Grand Rd.",
+            "house_no": "8927",
+            "provider": 103,
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+        {
+        "model": "provider.contact",
+        "pk": 104,
+        "fields": {
+            "email": "individual_entrepreneur_a@example.com",
+            "country": "USA",
+            "city": "Capitol Heights",
+            "street": "William St.",
+            "house_no": "9",
+            "provider": 104,
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+        {
+        "model": "provider.contact",
+        "pk": 105,
+        "fields": {
+            "email": "factory_b@example.com",
+            "country": "USA",
+            "city": "Houston",
+            "street": "Arrowhead Roade",
+            "house_no": "9498",
+            "provider": 105,
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+        {
+        "model": "provider.contact",
+        "pk": 106,
+        "fields": {
+            "email": "distributor_b@example.com",
+            "country": "USA",
+            "city": "Niles",
+            "street": "High Street",
+            "house_no": "39",
+            "provider": 106,
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+        {
+        "model": "provider.contact",
+        "pk": 107,
+        "fields": {
+            "email": "dealership_b@example.com",
+            "country": "USA",
+            "city": "Rockville",
+            "street": "North Somerset Ave.",
+            "house_no": "8802",
+            "provider": 107,
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+        {
+        "model": "provider.contact",
+        "pk": 108,
+        "fields": {
+            "email": "large_retail_chain_b@example.com",
+            "country": "USA",
+            "city": "Yorktown Heights",
+            "street": "Thatcher St.",
+            "house_no": "9785",
+            "provider": 108,
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    },
+            {
+        "model": "provider.contact",
+        "pk": 109,
+        "fields": {
+            "email": "individual_entrepreneur_b@example.com",
+            "country": "USA",
+            "city": "Gulfport",
+            "street": "East Bedford St.",
+            "house_no": "789",
+            "provider": 109,
+            "created_at": "2007-01-01T00:00:00Z",
+            "updated_at": "2007-01-01T00:00:00Z"
+        }
+    }
+]

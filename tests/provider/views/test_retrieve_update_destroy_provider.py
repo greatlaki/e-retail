@@ -20,7 +20,7 @@ class TestGet:
         ContactFactory(city='Minsk', provider=provider)
         ContactFactory(city='Grodno', provider=provider)
         product = ProductFactory(name='Product')
-        ProductToProviderFactory(product_id=product, provider_id=provider)
+        ProductToProviderFactory(product=product, provider=provider)
 
         response = api_client.get(f'/api/providers/{provider.pk}/')
 

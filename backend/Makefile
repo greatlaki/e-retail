@@ -29,3 +29,8 @@ test:
 .PHONY: run
 run:
 	poetry run python3 ./backend/manage.py runserver
+
+.PHONY: init-data
+run:
+	$(call log, data initialization)
+	./manage.py loaddata fixtures/initial_data.json
