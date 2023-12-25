@@ -9,6 +9,7 @@ from user.serializers import LoginSerializer
 
 @extend_schema(tags=['Auth'])
 class LoginApiView(generics.GenericAPIView):
+    permission_classes = (permissions.AllowAny,)
     serializer_class = LoginSerializer
     queryset = User.objects.all()
 
@@ -20,8 +21,6 @@ class LoginApiView(generics.GenericAPIView):
 
 @extend_schema(tags=['Auth'])
 class LogoutAPIView(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
-
     def post(self, request):
         logout(request)
         return Response({'success': 'Successfully logged out'}, status=status.HTTP_200_OK)

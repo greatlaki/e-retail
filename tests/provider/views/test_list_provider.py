@@ -14,7 +14,8 @@ from tests.provider.factories import (
 
 @pytest.mark.django_db
 class TestGet:
-    def test_get_providers(self, api_client):
+    def test_get_providers(self, api_client, active_user):
+        api_client.force_authenticate(active_user)
         provider_1 = ProviderFactory(name='First level', provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
         provider_2 = CustomerFactory(
             name='Second level', provider=provider_1, level=Provider.ProviderLevelChoices.SECOND_LEVEL
@@ -28,7 +29,8 @@ class TestGet:
 
         assert response.status_code == 200
 
-    def test_get_providers_with_contacts_and_products(self, api_client):
+    def test_get_providers_with_contacts_and_products(self, api_client, active_user):
+        api_client.force_authenticate(active_user)
         provider_1 = ProviderFactory(name='First level', provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
         provider_2 = CustomerFactory(
             name='Second level', provider=provider_1, level=Provider.ProviderLevelChoices.SECOND_LEVEL
@@ -47,7 +49,8 @@ class TestGet:
 
         assert response.status_code == 200
 
-    def test_filter_by_country(self, api_client):
+    def test_filter_by_country(self, api_client, active_user):
+        api_client.force_authenticate(active_user)
         provider_1 = ProviderFactory(name='First', provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
         provider_2 = ProviderFactory(name='Second', provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
         provider_3 = ProviderFactory(name='Third', provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
@@ -65,7 +68,8 @@ class TestGet:
         assert response.status_code == 200
         assert len(response.data) == 2
 
-    def test_filter_by_product_ids(self, api_client):
+    def test_filter_by_product_ids(self, api_client, active_user):
+        api_client.force_authenticate(active_user)
         provider_1 = ProviderFactory(provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
         provider_2 = ProviderFactory(provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
         provider_3 = ProviderFactory(provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
@@ -91,7 +95,8 @@ class TestGet:
         assert response.status_code == 200
         assert len(response.data) == 4
 
-    def test_it_returns_debt_statistic(self, api_client):
+    def test_it_returns_debt_statistic(self, api_client, active_user):
+        api_client.force_authenticate(active_user)
         provider_1 = ProviderFactory(
             provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL, debt=Decimal('0.0')
         )
@@ -116,3 +121,17 @@ class TestGet:
         assert response.status_code == 200
         assert len(response.data) == 1
         assert Decimal(response.data[0]['debt']) == provider_with_giant_debt.debt
+
+    def test_inactive_user_cannot_get_providers(self, api_client):
+        provider_1 = ProviderFactory(name='First level', provider=None, level=Provider.ProviderLevelChoices.FIRST_LEVEL)
+        provider_2 = CustomerFactory(
+            name='Second level', provider=provider_1, level=Provider.ProviderLevelChoices.SECOND_LEVEL
+        )
+        provider_3 = CustomerFactory(
+            name='Third level', provider=provider_2, level=Provider.ProviderLevelChoices.THIRD_LEVEL
+        )
+        CustomerFactory(name='Fourth level', provider=provider_3, level=Provider.ProviderLevelChoices.FOURTH_LEVEL)
+
+        response = api_client.get('/api/providers/')
+
+        assert response.status_code == 401
