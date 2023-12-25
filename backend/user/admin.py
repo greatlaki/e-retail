@@ -7,7 +7,7 @@ class UserAdmin(BaseUserAdmin):
     """Define the admin pages for user"""
 
     ordering = ['id']
-    list_display = ['email']
+    list_display = ['email', 'is_active']
     list_filter = (
         'email',
         'is_active',
@@ -24,7 +24,9 @@ class UserAdmin(BaseUserAdmin):
                 )
             },
         ),
+        ('Profile', {'fields': ('first_name', 'last_name')}),
         ('Important dates', {'fields': ('last_login',)}),
+        ('Employer', {'fields': ('employer',)}),
     )
     readonly_fields = ['last_login']
     add_fieldsets = (
