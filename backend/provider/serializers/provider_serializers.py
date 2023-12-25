@@ -6,7 +6,6 @@ from provider.constants import VALID_PROVIDER_LEVEL
 from provider.models.product import Product, ProductToProvider
 from provider.models.provider import Provider
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
 
 from provider.serializers.contact_serializers import ContactSerializer
 from provider.serializers.product_serializers import ProductSerializer
@@ -33,28 +32,35 @@ class ProviderSerializer(serializers.ModelSerializer):
     @staticmethod
     def custom_validate_first_level_chain(level: Provider.ProviderLevelChoices, provider: Provider):
         if level == Provider.ProviderLevelChoices.FIRST_LEVEL and provider is not None:
-            raise ValidationError({'level': 'Factory cannot have a provider'})
+            raise serializers.ValidationError({'level': 'Factory cannot have a provider'})
 
     @staticmethod
     def custom_validate_level_in_chain(level: Provider.ProviderLevelChoices, provider: Provider):
         if provider.level == Provider.ProviderLevelChoices.FIFTH_LEVEL:
-            raise ValidationError({'provider': 'Invalid provider'})
+            raise serializers.ValidationError({'provider': 'Invalid provider'})
 
         valid_level = provider.level + 1
         customers = provider.customers.all()
         if customers:
             for item in customers:
                 if item.level == customers[0].level:
-                    raise ValidationError({'provider': 'The selected provider is already involved in the chain.'})
+                    raise serializers.ValidationError(
+                        {'provider': 'The selected provider is already involved in the chain.'}
+                    )
 
         if level < provider.level:
-            raise ValidationError({'provider': VALID_PROVIDER_LEVEL.format(valid_level=valid_level)})
+            raise serializers.ValidationError({'provider': VALID_PROVIDER_LEVEL.format(valid_level=valid_level)})
 
         elif level == provider.level:
-            raise ValidationError({'provider': VALID_PROVIDER_LEVEL.format(valid_level=valid_level)})
+            raise serializers.ValidationError({'provider': VALID_PROVIDER_LEVEL.format(valid_level=valid_level)})
 
         elif level > provider.level + 1:
-            raise ValidationError({'provider': VALID_PROVIDER_LEVEL.format(valid_level=valid_level)})
+            raise serializers.ValidationError({'provider': VALID_PROVIDER_LEVEL.format(valid_level=valid_level)})
+
+    @staticmethod
+    def custom_validate_provider_name(name: str):
+        if len(name) > 50:
+            raise serializers.ValidationError({'name': 'Invalid name length'})
 
     def validate(self, attrs):
         provider = attrs.get('provider', None)
@@ -87,6 +93,10 @@ class ProviderSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         debt = validated_data.get('debt', None)
         product = validated_data.pop('product_id', None)
+        name = validated_data.pop('name', None)
+
+        if name is not None:
+            self.custom_validate_provider_name(name)
 
         if debt is not None:
             raise serializers.ValidationError({'debt': 'You cannot update this field'})
