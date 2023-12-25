@@ -80,7 +80,7 @@ class ProviderSerializer(serializers.ModelSerializer):
         if product is not None:
             with transaction.atomic():
                 provider = super().create(validated_data)
-                ProductToProvider.objects.create(provider_id=provider, product_id=product)
+                ProductToProvider.objects.create(provider=provider, product=product)
                 return provider
         return super().create(validated_data)
 
@@ -94,7 +94,7 @@ class ProviderSerializer(serializers.ModelSerializer):
         if product is not None:
             with transaction.atomic():
                 provider = super().update(instance, validated_data)
-                ProductToProvider.objects.create(provider_id=provider, product_id=product)
+                ProductToProvider.objects.create(provider=provider, product=product)
 
         return super().update(instance, validated_data)
 

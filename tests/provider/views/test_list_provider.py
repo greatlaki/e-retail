@@ -42,8 +42,8 @@ class TestGet:
         product1 = ProductFactory(name='Product')
         product2 = ProductFactory(name='Another Product')
 
-        ProductToProviderFactory(product_id=product1, provider_id=provider_1)
-        ProductToProviderFactory(product_id=product2, provider_id=provider_2)
+        ProductToProviderFactory(product=product1, provider=provider_1)
+        ProductToProviderFactory(product=product2, provider=provider_2)
 
         response = api_client.get('/api/providers/')
 
@@ -80,15 +80,15 @@ class TestGet:
         product2 = ProductFactory()
         product3 = ProductFactory()
 
-        ProductToProviderFactory(product_id=product1, provider_id=provider_1)
-        ProductToProviderFactory(product_id=product1, provider_id=provider_2)
-        ProductToProviderFactory(product_id=product1, provider_id=provider_3)
+        ProductToProviderFactory(product=product1, provider=provider_1)
+        ProductToProviderFactory(product=product1, provider=provider_2)
+        ProductToProviderFactory(product=product1, provider=provider_3)
 
-        ProductToProviderFactory(product_id=product2, provider_id=provider_5)
-        ProductToProviderFactory(product_id=product2, provider_id=provider_4)
+        ProductToProviderFactory(product=product2, provider=provider_5)
+        ProductToProviderFactory(product=product2, provider=provider_4)
 
-        ProductToProviderFactory(product_id=product3, provider_id=provider_1)
-        ProductToProviderFactory(product_id=product3, provider_id=provider_3)
+        ProductToProviderFactory(product=product3, provider=provider_1)
+        ProductToProviderFactory(product=product3, provider=provider_3)
 
         response = api_client.get(f'/api/providers/?product_ids={product3.pk},{product2.pk}')
 
