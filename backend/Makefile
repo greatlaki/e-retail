@@ -1,13 +1,7 @@
 .PHONY: install
 install:
 	$(call log, installing packages)
-	poetry install --no-dev
-
-.PHONY: install-dev
-install-dev:
-	$(call log, installing development packages)
 	poetry install
-	poetry run pre-commit install
 
 .PHONY: format
 format:
