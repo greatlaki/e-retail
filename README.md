@@ -19,7 +19,7 @@ the plant is always at level 0, and if the retail network refers directly to
 the plant, bypassing the other links, its level is 1.
 
 ## Configuration
-Configuration is stored in `.env`, for examples see `default.env`
+Configuration is stored in `backend/.env`, for examples see `default.env`
 
 ## Installing on a local machine
 This project requires python 3.11. Python virtual environment should be installed and activated.
@@ -31,7 +31,7 @@ Install requirements:
 make install
 ```
 
-### Docker
+## Docker
 Then run the following command in the same directory as the `docker-compose.yml` file to start the container.
 `docker compose up -d`
 
@@ -50,15 +50,17 @@ make test
   - a link to the "Provider";
   - filter by city name;
   - "admin action", clearing debts to the provider of selected objects;
+  - Admin site - {{domain}}/admin;
 
 - API:
   - Information about all network objects;
-  - Filters: by country, by product ids
-  - CRUD (Provider objects, Product objects)
-  - Output of statistics on objects whose debt exceeds the average debt of all objects
-  - API is available only to authorized users
+  - Filters: by country, by product ids;
+  - CRUD (Provider objects, Product objects);
+  - Output of statistics on objects whose debt exceeds the average debt of all objects;
+  - API is available only to authorized users;
+  - API description - {{domain}}/docs;
 
-- The ability to fill the database (Users have a password - "Y530-15ICH").
+- The ability to fill the database (users have a password - "Y530-15ICH")
   ```bash
   make init-data
   ```
